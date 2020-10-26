@@ -20,4 +20,4 @@ class CommandHelp(Command):
                 val += "`" + prefix + cmdobj.command + "` - " + cmdobj.info + "\n"
             embed.add_field(name=header, value=val, inline=False)
 
-        await message.channel.send(embed=embed)
+        await message.channel.sendLoot(embed=embed)
