@@ -1,7 +1,5 @@
 from src.loot.LootManager import LootManager
-import src.utility.Global as Global
 
-import discord
 from datetime import datetime, timedelta
 from random import randrange
 
@@ -12,7 +10,7 @@ class Watcher:
         self.cooldown = 1  # time in seconds for watcher cooldown
         self.currentLoot = None
 
-        self.boss_cooldown_set = 10
+        self.boss_cooldown_set = 0
         self.boss_cooldown = self.boss_cooldown_set
         self.boss = False
 
@@ -32,13 +30,13 @@ class Watcher:
         else:
             loot = LootManager.generateLoot(LootManager.ores)
 
-        if val < 30 and self.boss_cooldown <= 0:
+        if val < 100 and self.boss_cooldown <= 0:
             self.boss_cooldown = self.boss_cooldown_set
             self.currentLoot = LootManager.generateLoot(LootManager.bosses)
             self.boss = True
-            await loot.sendLoot()
+            await self.currentLoot.sendLoot()
             return
 
         self.boss_cooldown -= 1
         self.currentLoot = loot
-        await loot.sendLoot()
+        await self.currentLoot.sendLoot()

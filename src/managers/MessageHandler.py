@@ -40,9 +40,7 @@ async def messageHandler(message):
                 if msgs[0] == Global.watcher.currentLoot.command:
                     if len(msgs) > 1:
                         if msgs[1] == Global.watcher.currentLoot.rolled_key:
-                            Global.watcher.currentLoot.contributors.append(message.author)
-                            await Global.watcher.currentLoot.updateLoot()
-                            Global.watcher.currentLoot = None
+                            await Global.watcher.currentLoot.updateLoot(message.author)
 
             for headers in commands:
                 header = commands[headers]

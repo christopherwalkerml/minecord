@@ -5,3 +5,5 @@ prefix = 'm!'
 channels = []
 
 watcher = Watcher()
+
+users = {}

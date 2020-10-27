@@ -5,19 +5,21 @@ import discord
 
 class Loot:
 
-    def __init__(self, chance, rarity, loot_table, key_table, command, ltype, path):
+    def __init__(self, chance, rarity, url, loot_table, key_table, command, ltype):
         self.chance = chance
         self.rarity = rarity
+        self.url = url
         self.loot_table = loot_table
         self.key_table = key_table
 
+        self.rolled_items = "unknown"
+        self.rolled_key = "unknown"
         self.generate()
 
         self.sent_message = None
 
         self.command = command
         self.type = ltype
-        self.src = path
 
         self.contributors = []
 
@@ -28,8 +30,9 @@ class Loot:
         items = []
 
         for l in self.loot_table:
-            if randrange(100) <= l["chance"]:
-                items.append(l["item"])
+            for i in l["chance"]:
+                if randrange(100) <= i:
+                    items.append(l["item"])
 
         return [str(items.count(i)) + " " + i for i in set(items)]
 
@@ -37,24 +40,25 @@ class Loot:
         self.rolled_items = self.getItem()
         self.rolled_key = self.getKey()
 
-    async def sendLoot(self):
-        src = self.rarity + ".png"
-        file = discord.File(self.src + src, filename=src)
+    def createEmbed(self, name, value):
         embed = discord.Embed()
-        embed.add_field(name=src.replace(".png", "").capitalize() + " " + self.type + " has appeared", value="Type `" + Global.prefix + self.command + " " + self.rolled_key + "` to get it")
-        embed.set_thumbnail(url="attachment://" + src)
-        self.sent_message = await Global.channels[randrange(len(Global.channels))].send(file=file, embed=embed)
+        embed.add_field(name=name, value=value)
+        embed.set_thumbnail(url=self.url)
+        return embed
 
-    async def updateLoot(self):
+    async def sendLoot(self):
+        embed = self.createEmbed(self.rarity.capitalize() + " " + self.type + " has appeared", "Type `" + Global.prefix + self.command + " " + self.rolled_key + "` to get it")
+        self.sent_message = await Global.channels[randrange(len(Global.channels))].send(embed=embed)
+
+    async def updateLoot(self, message_author):
+        self.contributors.append(message_author)
+
         items = ""
         for i in self.rolled_items:
             items += "- `" + i + "`\n"
 
-        src = self.rarity + ".png"
-        file = discord.File(self.src + src, filename=src)
-        embed = discord.Embed()
-        embed.add_field(name=self.contributors[0].name + " has collected " + self.rarity + " " + self.type, value=items)
-        embed.set_thumbnail(url="attachment://" + src)
-        await self.sent_message.delete()
-        await Global.channels[randrange(len(Global.channels))].send(file=file, embed=embed)
+        embed = self.createEmbed(self.contributors[0].name + " has collected " + self.rarity + " " + self.type, items)
+        await self.sent_message.edit(embed=embed)
+
+        Global.watcher.currentLoot = None
 
