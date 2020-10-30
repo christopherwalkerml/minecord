@@ -1,9 +1,12 @@
 from src.watchers.Watcher import Watcher
+from src.managers.mysql.SQLManager import SQLManager
+
+from discord import Client
+
+client = Client()
 
 prefix = 'm!'
 
-channels = []
+sql = SQLManager()
 
 watcher = Watcher()
-
-users = {}

@@ -15,11 +15,12 @@ class Watcher:
         self.boss = False
 
     async def watch(self):
-        if self.boss:
-            return
-
         if datetime.now() - self.last > timedelta(seconds=self.cooldown):
             self.last = datetime.now()
+
+            if self.currentLoot is not None:
+                await self.currentLoot.clearLoot()
+
             await self.activate()
 
     async def activate(self):

@@ -1,13 +1,13 @@
 import discord
 
-from src.utility.Global import *
+import src.utility.Global as Global
 
 from src.cmds.Command import Command
 
 class CommandHelp(Command):
 
     def __init__(self, command, info, commandlist):
-        Command.__init__(self, command, info)
+        Command.__init__(self, command, [], info)
         self.commandlist = commandlist
 
     async def run(self, message):
@@ -17,7 +17,7 @@ class CommandHelp(Command):
             commands = self.commandlist[header]
             val = ""
             for cmdobj in commands:
-                val += "`" + prefix + cmdobj.command + "` - " + cmdobj.info + "\n"
+                val += "`" + Global.prefix + ' '.join(cmdobj.command)  + " " + ' '.join(cmdobj.optionals) + "` - " + cmdobj.info + "\n"
             embed.add_field(name=header, value=val, inline=False)
 
-        await message.channel.sendLoot(embed=embed)
+        await message.channel.send(embed=embed)
