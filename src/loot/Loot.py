@@ -71,7 +71,7 @@ class Loot:
         self.contributors[0].giveItems(self.rolled_items)
 
         embed = self.createEmbed(str(user) + " has collected " + self.rarity + " " + self.type, items)
-        embed.colour = self.contributors[0].cosmetic["colour"]
+        embed.colour = int(self.contributors[0].cosmetic["embed_colour"], 0)
         await self.sent_message.edit(embed=embed)
 
         Global.watcher.currentLoot = None

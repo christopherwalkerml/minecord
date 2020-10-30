@@ -1,3 +1,5 @@
+from src.utility.User import User
+
 import mysql.connector
 import configparser
 import os
@@ -20,14 +22,16 @@ class SQLManager:
         self.cursor = self.db.cursor()
 
     def insert(self, table_name, columns, values):
-        if len(columns) > 0:
-            cols = f"({', '.join(columns)})"
-        else:
-            cols = ""
+        adds = []
 
-        print(f"INSERT INTO {table_name} {cols} VALUES {tuple(values)} ON DUPLICATE KEY UPDATE")
+        for c in columns:
+            adds.append(f"{c}=VALUES({c})")
 
-        self.cursor.execute(f"INSERT INTO {table_name} {cols} VALUES {tuple(values)} ON DUPLICATE KEY UPDATE")
+        cols = f"{tuple(columns)}".replace("'", "")
+
+        print(f"INSERT INTO {table_name} {cols} VALUES {tuple(values)} ON DUPLICATE KEY UPDATE {','.join([f'{c}=VALUES({c})' for c in columns])}".replace("'", ""))
+
+        self.cursor.execute(f"INSERT INTO {table_name} {cols} VALUES {tuple(values)} ON DUPLICATE KEY UPDATE {','.join([f'{c}=VALUES({c})' for c in columns])}".replace(",)", ")"))
         self.db.commit()
 
     def select(self, selector, table_name):
@@ -47,5 +51,11 @@ class SQLManager:
         return [int(u[0]) for u in self.select("user_id", "user_properties")]
 
     def get_user(self, uid):
-        user = self.select_where("*", "user_properties", "user_id", str(uid))
-        print(user)
+        if uid in self.get_users():
+            user = self.select_where("*", "user_properties", "user_id", str(uid))
+            user += self.select_where("*", "user_cosmetic", "user_id", str(uid))
+            user += self.select_where("*", "user_stats", "user_id", str(uid))
+            user += self.select_where("*", "user_inventory", "user_id", str(uid))
+
+            return User(uid, user)
+        return User(uid)

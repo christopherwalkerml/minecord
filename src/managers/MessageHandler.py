@@ -29,11 +29,12 @@ async def messageHandler(message):
     if not message.author.bot:
         content = message.content.lower()
         author = message.author
+
         if content.startswith(Global.prefix):
 
             if author.id not in Global.sql.get_users():
                 user = User(author.id)
-                user.save()
+
 
             msgs = content.split()
             msgs[0] = msgs[0].replace(Global.prefix, "")
