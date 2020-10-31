@@ -33,8 +33,7 @@ async def messageHandler(message):
         if content.startswith(Global.prefix):
 
             if author.id not in Global.sql.get_users():
-                user = User(author.id)
-
+                User(author.id, True)
 
             msgs = content.split()
             msgs[0] = msgs[0].replace(Global.prefix, "")
@@ -43,7 +42,7 @@ async def messageHandler(message):
                 if msgs[0] == Global.watcher.currentLoot.command:
                     if len(msgs) > 1:
                         if msgs[1] == Global.watcher.currentLoot.rolled_key:
-                            await Global.watcher.currentLoot.updateLoot(Global.sql.get_user(author.id))
+                            await Global.watcher.currentLoot.updateLoot(User(author.id))
                             await message.delete()
                         return
 

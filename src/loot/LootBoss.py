@@ -24,6 +24,7 @@ class LootBoss(Loot):
     def generate(self):
         self.health = self.maxhealth
         self.rolled_key = self.getKey()
+        self.contributors = []
 
     async def sendLoot(self):
         embed = self.createEmbed(self.rarity.capitalize() + " " + self.type + " has appeared", "Type `" + Global.prefix + self.command + " " + self.rolled_key + "` to get it")

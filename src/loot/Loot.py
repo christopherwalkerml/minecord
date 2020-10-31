@@ -15,6 +15,7 @@ class Loot:
 
         self.rolled_items = []
         self.rolled_key = "unknown"
+        self.contributors = []
         self.generate()
 
         self.sent_message = None
@@ -22,7 +23,8 @@ class Loot:
         self.command = command
         self.type = ltype
 
-        self.contributors = []
+    def __repr__(self):
+        return f"<Loot {self.rarity} {self.type}>"
 
     def getKey(self):
         return self.key_table[randrange(len(self.key_table))]
@@ -37,6 +39,7 @@ class Loot:
         return items
 
     def generate(self):
+        self.contributors = []
         self.rolled_items = self.getItems()
         self.rolled_key = self.getKey()
 
@@ -50,8 +53,10 @@ class Loot:
         embed = self.createEmbed(self.rarity.capitalize() + " " + self.type + " has appeared", "Type `" + Global.prefix + self.command + " " + self.rolled_key + "` to get it")
         self.sent_message = await getRandomChannel().send(embed=embed)
 
-    async def updateLoot(self, message_author):
-        self.contributors.append(message_author)
+    async def updateLoot(self, message_user):
+        Global.watcher.currentLoot = None
+
+        self.contributors.append(message_user)
 
         items = ""
         collection = None
@@ -74,11 +79,9 @@ class Loot:
         embed.colour = int(self.contributors[0].cosmetic["embed_colour"], 0)
         await self.sent_message.edit(embed=embed)
 
+    async def clearLoot(self):
         Global.watcher.currentLoot = None
 
-    async def clearLoot(self):
         embed = self.createEmbed(self.rarity.capitalize() + " " + self.type + " has despawned", "You took to long to claim it!")
         await self.sent_message.edit(embed=embed)
-
-        Global.watcher.currentLoot = None
 

@@ -12,7 +12,6 @@ class Watcher:
 
         self.boss_cooldown_set = 10
         self.boss_cooldown = self.boss_cooldown_set
-        self.boss = False
 
     async def watch(self):
         if datetime.now() - self.last > timedelta(seconds=self.cooldown):
@@ -34,7 +33,6 @@ class Watcher:
         if val < 30 and self.boss_cooldown <= 0:
             self.boss_cooldown = self.boss_cooldown_set
             self.currentLoot = LootManager.generateLoot(LootManager.bosses)
-            self.boss = True
             await self.currentLoot.sendLoot()
             return
 

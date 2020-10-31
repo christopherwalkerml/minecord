@@ -5,10 +5,10 @@ from random import randrange
 class Item:
 
     items = {
-        "coal": [770877818288078868, "material"],
         "stick": [770878560339492874, "material"],
         "oak plank": [770878553143246878, "material"],
         "cobblestone": [770884221610623046, "material"],
+        "coal": [770877818288078868, "material"],
         "iron ore": [770878497605812245, "material"],
         "iron ingot": [771577929674915860, "material"],
         "gold ore": [770878490195001366, "material"],

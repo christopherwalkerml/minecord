@@ -19,7 +19,7 @@ class SQLManager:
             database=config["mysql"]["database"],
         )
 
-        self.cursor = self.db.cursor()
+        self.cursor = self.db.cursor(dictionary=True)
 
     def insert(self, table_name, columns, values):
         adds = []
@@ -45,17 +45,15 @@ class SQLManager:
         return result
 
     def get_channels(self):
-        return [int(c[0]) for c in self.select("channel_id", "enabled_channels")]
+        return [int(c['channel_id']) for c in self.select("channel_id", "enabled_channels")]
 
     def get_users(self):
-        return [int(u[0]) for u in self.select("user_id", "user_properties")]
+        return [int(u['user_id']) for u in self.select("user_id", "user_properties")]
 
-    def get_user(self, uid):
-        if uid in self.get_users():
-            user = self.select_where("*", "user_properties", "user_id", str(uid))
-            user += self.select_where("*", "user_cosmetic", "user_id", str(uid))
-            user += self.select_where("*", "user_stats", "user_id", str(uid))
-            user += self.select_where("*", "user_inventory", "user_id", str(uid))
-
-            return User(uid, user)
-        return User(uid)
+    def get_user_data(self, uid):
+        return {
+            "properties": self.select_where("*", "user_properties", "user_id", str(uid))[0],
+            "cosmetic": self.select_where("*", "user_cosmetic", "user_id", str(uid))[0],
+            "stats": self.select_where("*", "user_stats", "user_id", str(uid))[0],
+            "inventory": self.select_where("*", "user_inventory", "user_id", str(uid))[0]
+        }
