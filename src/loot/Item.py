@@ -14,7 +14,7 @@ class Item:
         "gold ore": [770878490195001366, "material"],
         "gold ingot": [771577941418049586, "material"],
         "diamond": [770877825578303509, "material"],
-        "netherite ore": [770878532796153876, "material"],
+        "ancient debris": [770878532796153876, "material"],
         "netherite scraps": [771577968702128158, "material"],
         "netherite ingot": [771577951429853194, "material"],
         "chest": [770877788244410408, "special"],

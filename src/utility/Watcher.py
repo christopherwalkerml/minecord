@@ -1,4 +1,4 @@
-from src.loot.LootManager import LootManager
+from src.managers.LootManager import LootManager
 
 from datetime import datetime, timedelta
 from random import randrange

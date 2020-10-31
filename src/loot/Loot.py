@@ -72,7 +72,7 @@ class Loot:
             emoji = Item.getEmoji(collection.name)
             items += f"- {emoji} ***`{collection.name}`***"
 
-        user = getUserFromId(self.contributors[0].userId)
+        user = Global.client.get_user(self.contributors[0].userId)
         self.contributors[0].giveItems(self.rolled_items)
 
         embed = self.createEmbed(str(user) + " has collected " + self.rarity + " " + self.type, items)

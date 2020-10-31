@@ -10,3 +10,5 @@ prefix = 'm!'
 sql = SQLManager()
 
 watcher = Watcher()
+
+pages = []

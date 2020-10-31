@@ -1,7 +1,7 @@
 from src.cmds.Command import Command
 from src.utility.User import User
-from src.utility.util import getUserFromId
 from src.loot.Item import Item
+import src.utility.Global as Global
 
 import discord
 
@@ -12,7 +12,7 @@ class CommandInventory(Command):
 
     async def run(self, message):
         user = User(message.author.id)
-        disc_user = getUserFromId(user.userId)
+        disc_user = Global.client.get_user(user.userId)
 
         embed = discord.Embed(title=str(disc_user) + "'s Inventory", color=int(user.cosmetic["embed_colour"], 0))
 

@@ -1,29 +1,33 @@
 from src.cmds.Command import Command
-from src.cmds.Config.CommandConfig_Enable import CommandConfig_Enable
-from src.cmds.Config.CommandConfig_Disable import CommandConfig_Disable
-from src.cmds.Config.CommandConfig_Get import CommandConfig_Get
-from src.cmds.Other.CommandInventory import CommandInventory
-from src.cmds.Other.CommandHelp import CommandHelp
+from src.cmds.config.CommandConfig_Enable import CommandConfig_Enable
+from src.cmds.config.CommandConfig_Disable import CommandConfig_Disable
+from src.cmds.config.CommandConfig_Get import CommandConfig_Get
+from src.cmds.other.CommandInventory import CommandInventory
+from src.cmds.other.CommandHelp import CommandHelp
+from src.cmds.game.CommandLoot import CommandLoot
 from src.utility.User import User
 
 import src.utility.Global as Global
 
 commands = {
     "Game Commands": [
-        Command(["open"], ["<key>"], "Collects a loot chest"),
-        Command(["mine"], ["<key>"], "Mines an ore"),
-        Command(["attack"], ["<key>"], "Attacks an enemy")
+        CommandLoot(["open"], ["<key>"], "Collects a loot chest"),
+        CommandLoot(["mine"], ["<key>"], "Mines an ore"),
+        CommandLoot(["attack"], ["<key>"], "Attacks an enemy"),
+        Command(["recipes"], [], "View a list of all recipes"),
+        Command(["recipe"], ["<item>"], "View a single recipe"),
+        Command(["craft"], ["<item>"], "Craft an item")
     ],
-    "Config": [
+    "config": [
         CommandConfig_Enable(["config", "enable"], ["#channel"], "Enable bot messages in a channel"),
         CommandConfig_Disable(["config", "disable"], ["#channel"], "Disable bot messages in a channel"),
         CommandConfig_Get(["config", "get"], "Get channels in which bot messages are enabled"),
     ],
-    "Other": [
+    "other": [
         CommandInventory(["inventory"], "View your inventory")
     ]
 }
-commands["Other"].append(CommandHelp(["help"], "shows this text block", commands))
+commands["other"].append(CommandHelp(["help"], "shows this text block", commands))
 
 async def messageHandler(message):
     if not message.author.bot:
@@ -38,14 +42,6 @@ async def messageHandler(message):
             msgs = content.split()
             msgs[0] = msgs[0].replace(Global.prefix, "")
 
-            if Global.watcher.currentLoot is not None:
-                if msgs[0] == Global.watcher.currentLoot.command:
-                    if len(msgs) > 1:
-                        if msgs[1] == Global.watcher.currentLoot.rolled_key:
-                            await Global.watcher.currentLoot.updateLoot(User(author.id))
-                            await message.delete()
-                        return
-
             for headers in commands:
                 header = commands[headers]
                 for c in header:
@@ -58,6 +54,7 @@ async def messageHandler(message):
                             break
                     if match:
                         await c.run(message)
+                        return
 
         else:
             if len(Global.sql.get_channels()) > 0:

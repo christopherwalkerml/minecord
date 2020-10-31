@@ -28,7 +28,7 @@ class LootBoss(Loot):
 
     async def sendLoot(self):
         embed = self.createEmbed(self.rarity.capitalize() + " " + self.type + " has appeared", "Type `" + Global.prefix + self.command + " " + self.rolled_key + "` to get it")
-        embed.add_field(name=f"Health - {floor((self.health / self.maxhealth) * 10)}", value=self.getHealthString(), inline=False)
+        embed.add_field(name=f"Health > {self.health}", value=self.getHealthString(), inline=False)
         self.sent_message = await getRandomChannel().send(embed=embed)
 
     async def updateLoot(self, message_author):
@@ -42,11 +42,11 @@ class LootBoss(Loot):
                 return
 
             embed = self.createEmbed(self.rarity.capitalize() + " " + self.type + " has appeared", "Type `" + Global.prefix + self.command + " " + self.rolled_key + "` to attack it")
-            embed.add_field(name=f"Health - {floor((self.health / self.maxhealth) * 10)}", value=self.getHealthString(), inline=False)
+            embed.add_field(name=f"Health > {self.health}", value=self.getHealthString(), inline=False)
             await self.sent_message.edit(embed=embed)
         else:
             embed = self.createEmbed(self.rarity.capitalize() + " " + self.type + " has appeared", "Type `" + Global.prefix + self.command + " " + self.rolled_key + "` to attack it")
-            embed.add_field(name=f"Health - {floor((self.health / self.maxhealth) * 10)}", value=self.getHealthString(), inline=False)
+            embed.add_field(name=f"Health > {self.health}", value=self.getHealthString(), inline=False)
             embed.set_footer(text="You cannot attack twice in a row!")
             await self.sent_message.edit(embed=embed)
 
@@ -77,6 +77,6 @@ class LootBoss(Loot):
             for i in total_items[u]:
                 items += "- `" + str(total_items[u][i]) + " " + i + "`\n"
 
-            embed.add_field(name=getUserFromId(u), value=items)
+            embed.add_field(name=Global.client.get_user(u), value=items)
 
         await self.sent_message.edit(embed=embed)

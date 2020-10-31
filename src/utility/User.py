@@ -6,14 +6,12 @@ class User:
     def __init__(self, uid, new=False):
         self.userId = uid
 
-        print(new)
-
         self.properties = {}
         self.cosmetic = {}
         self.inventory = {}
         self.stats = {}
 
-        properties = [("pickaxe_level", 0), ("sword_level", 0), ("enchantment_sharpness", 0), ("enchantment_looting", 0), ("experience", 0), ("emeralds" ,0)]
+        properties = [("pickaxe_level", 0), ("sword_level", 0), ("enchantment_sharpness", 0), ("enchantment_looting", 0), ("experience", 0), ("emeralds", 0), ("crafting_table", 0), ("furnace", 0)]
         cosmetic = [("embed_colour", "0x2C2F33")]
         stats = {
             "chests": [("basic", 0), ("common", 0), ("uncommon", 0), ("rare", 0), ("epic", 0)],
@@ -45,10 +43,6 @@ class User:
 
         else:
             userdata = Global.sql.get_user_data(self.userId)
-
-            print(userdata)
-
-            print('x')
 
             for p in userdata["properties"]:
                 if p == "user_id":
@@ -82,8 +76,6 @@ class User:
 
                 self.inventory[cat][item] = userdata["inventory"][i]
 
-            print(self.inventory)
-
 
     def __repr__(self):
         return f"<User userId: {self.userId}\n" \
@@ -108,6 +100,18 @@ class User:
             self.inventory[cat][name] += count
 
         self.save_inventory()
+
+    # format: {item: count, item: count}
+    def takeItems(self, items):
+        for i in items:
+            cat = Item.getCategory(i)
+            self.inventory[cat][i] = self.inventory[cat][i] - items[i]
+
+        self.save_inventory()
+
+    def getItemCount(self, item):
+        cat = Item.getCategory(item)
+        return self.inventory[cat][item]
 
     def getInventoryByType(self, item_type):
         return [(m if Item.getCategory(m) == item_type else None) for m in self.inventory]

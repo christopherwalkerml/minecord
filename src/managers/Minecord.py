@@ -2,7 +2,7 @@
 import src.utility.Global as Global
 
 import discord,os
-from src.managers.MessageHandler import messageHandler
+from src.managers.ChatManager import messageHandler
 
 dir = os.path.dirname(os.path.realpath(__file__))
 
