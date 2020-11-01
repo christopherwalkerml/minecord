@@ -2,7 +2,8 @@
 import src.utility.Global as Global
 
 import discord,os
-from src.managers.ChatManager import messageHandler
+from src.managers.chatManager import messageHandler
+from src.managers.reactionManager import reactionManager
 
 dir = os.path.dirname(os.path.realpath(__file__))
 
@@ -14,6 +15,10 @@ async def on_ready():
 @Global.client.event
 async def on_message(message):
     await messageHandler(message)
+
+@Global.client.event
+async def on_reaction_add(reaction, user):
+    await reactionManager(reaction, user)
 
 
 file = open(dir + "\\token.txt", "r")

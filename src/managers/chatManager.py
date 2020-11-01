@@ -34,8 +34,10 @@ async def messageHandler(message):
         content = message.content.lower()
         author = message.author
 
+        print(content)
+        print(Global.prefix)
         if content.startswith(Global.prefix):
-
+            print('hey')
             if author.id not in Global.sql.get_users():
                 User(author.id, True)
 
